@@ -7,7 +7,7 @@ import DetailPage from './module/detail/DetailPage'
 import { createStackNavigator, } from 'react-navigation'
 
 const App = createStackNavigator({
-  // Home: { screen: HomePage },
+  Home: { screen: HomePage },
   Detail: { screen: DetailPage }
 })
 

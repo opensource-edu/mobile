@@ -1,6 +1,7 @@
 import Toc from "../model/toc";
 import CourseRemote from "../model/remote";
 import TocDTOAssembler from "./dto/assembler/TocDTOAssembler";
+import Course from "../model/course";
 
 export default class CourseService {
 
@@ -10,7 +11,9 @@ export default class CourseService {
     }
 
     async fetchCourse(id) {
-
+        const course = await this.courseRemote.fetchCourse(1)
+        console.debug(course)
+        return Course.fromJSON(course)
     }
 
     /**
@@ -20,10 +23,9 @@ export default class CourseService {
     async fetchTocDTOList(id) {
         const dto = await this.courseRemote.fetchTocs(1)
         const tocs = Toc.fromJSON(dto)
-
+        return tocs
         
-        const dtoList = this.tocAssembler.toDTOList(tocs)
-        console.debug(dtoList)
-        return dtoList
+        // const dtoList = this.tocAssembler.toDTOList(tocs)
+        // return dtoList
     }
 }

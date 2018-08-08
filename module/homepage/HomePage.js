@@ -4,7 +4,8 @@ import {Platform, StyleSheet, Text, Image, View, FlatList, TouchableOpacity} fro
 
 export default class HomePage extends Component {
     static navigationOptions = {
-        title: 'Welcome',
+        title: 'Home',
+        // header: null
     }
 
     constructor(props) {
@@ -36,13 +37,14 @@ export default class HomePage extends Component {
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({item}) =>
                     <TouchableOpacity onPress={(item) => this.onPressCourse(item)} style={styles.lesson}>   
-                        <View style={{flex: 0.3}}>
-                            <Image style={{flex: 1}} source={{uri: item.cover}} />
+                        <View style={styles.courseContainer}>
+                            <Image style={styles.courseCover} resizeMode="cover" source={{uri: item.cover}} />
+                            <View style={{flex: 1, padding: 20}}>
+                                <Text style={styles.lessonTitle}>{item.title}</Text>
+                                <Text style={styles.lessonDescription}>{item.description}</Text>
+                            </View>
                         </View>     
-                        <View style={{flex: 0.7}}>
-                            <Text style={styles.lessonTitle}>{item.title}</Text>
-                            <Text style={styles.lessonDescription}>{item.description}</Text>
-                        </View>
+                        
                     </TouchableOpacity>
                 }
             />
@@ -51,19 +53,40 @@ export default class HomePage extends Component {
 }
 
 const styles = StyleSheet.create({
+    courseContainer: {
+        borderTopLeftRadius: 8,
+        borderTopRightRadius: 8,
+        borderBottomLeftRadius: 8,
+        borderBottomRightRadius: 8,
+        flex: 1,
+        backgroundColor: '#FFF',
+        shadowColor: '#000',
+        shadowRadius: 15,
+        shadowOffset: { width: 0, height: 2}
+    },
+
+    courseCover: {
+        borderTopLeftRadius: 8,
+        borderTopRightRadius: 8,
+        flex: 1,
+        width: null,
+        height: 250,
+        overflow: 'hidden'
+    },
+
     lesson: {
         margin: 20,
-        flex: 1,
-        flexDirection: 'row'
+        flex: 1
     },
 
     lessonTitle: {
-        fontSize: 32,
+        fontSize: 18,
+        lineHeight: 24,
         color: '#000'
     },
 
     lessonDescription: {
-        fontSize: 18,
-        lineHeight: 30
+        fontSize: 12,
+        lineHeight: 20
     },
 })
