@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import {Platform, StyleSheet, Text, Image, View, FlatList, TouchableOpacity, WebView} from 'react-native'
+import {Platform, StyleSheet, Text, Image, View, FlatList, TouchableOpacity, WebView, Dimensions} from 'react-native'
 import SegmentedControlTab from 'react-native-segmented-control-tab'
 import CourseService from '../service/course'
+import Video from 'react-native-video'
 import {BoxShadow} from 'react-native-shadow'
 
 export default class DetailPage extends Component {
@@ -15,22 +16,23 @@ export default class DetailPage extends Component {
         this.courseService = new CourseService()
         this.state = {
             indexSelected: 1,
-            tocs: [],
             course: {
                 title: "",
-                author: ""
+                author: "",
+                tocs: [],
+                defaultVideo() {
+                    return ""
+                }
             }
         }
     }
 
     async componentDidMount() {
         console.debug('componentDidMount did call')
-        const tocs = await this.courseService.fetchTocDTOList(1)
         const course = await this.courseService.fetchCourse(1)
         console.debug(course)
         this.setState({
             ...this.state,
-            tocs: tocs,
             course: course
         })
         
@@ -64,7 +66,20 @@ export default class DetailPage extends Component {
 
         return (
             <View style={{flex: 1}}>
-                <View></View>
+                <View>
+                
+                    <Video
+                        source={{uri: "https://ikeepon.oss-cn-hangzhou.aliyuncs.com/video/Microservices.mp4"}}
+                        ref={(ref) => {
+                            this.player = ref
+                        }}
+                        // onBuffer={this.onBuffer}                // Callback when remote video is buffering
+                        // onEnd={this.onEnd}                      // Callback when playback finishes
+                        // onError={this.videoError}               // Callback when video cannot be loaded
+                        style={styles.video}
+                    />
+         
+                </View>
                 
                 <View style={{flex: 1, backgroundColor: '#FFF'}}>
                     <View style={{height: 30, marginLeft: 20, marginRight: 20, marginTop: 50, marginBottom: 50}}>
@@ -89,7 +104,7 @@ export default class DetailPage extends Component {
                     {1 == this.state.indexSelected && <View style={{flex: 1}}>
                         <FlatList 
                             style={{flex: 1}}
-                            data={this.state.tocs}
+                            data={this.state.course.tocs}
                             keyExtractor={(item) => item.id.toString()}
                             renderItem={({item}) =>
                                 <TouchableOpacity onPress={(item) => this.onTocClick(item)} style={styles.chapterListItem}>   
@@ -207,5 +222,10 @@ const styles = StyleSheet.create({
         lineHeight: 13,
         color: "#828282",
         fontWeight: "bold"
+    },
+
+    video: {
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').width * 0.5265
     }
 })

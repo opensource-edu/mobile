@@ -19,28 +19,14 @@ export default class CourseRemote {
                     {
                         id: 2,
                         title: 'The Evolution of Applications Udacity',
-                        time_length: 60
+                        time_length: 60,
+                        video: "https://ikeepon.oss-cn-hangzhou.aliyuncs.com/video/The%20Evolution%20of%20Applications.mp4"
                     },
                     {
                         id: 3,
                         title: 'Microservices',
-                        time_length: 60
-                    }
-                ]
-            },
-            {
-                id: 4,
-                title: 'Kubernetes Tutorial',
-                children: [
-                    {
-                        id: 5,
-                        title: 'The Evolution of Applications Udacity',
-                        time_length: 60
-                    },
-                    {
-                        id: 6,
-                        title: 'Microservices',
-                        time_length: 60
+                        time_length: 60,
+                        video: "https://ikeepon.oss-cn-hangzhou.aliyuncs.com/video/Microservices.mp4"
                     }
                 ]
             }

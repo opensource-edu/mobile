@@ -11,21 +11,14 @@ export default class CourseService {
     }
 
     async fetchCourse(id) {
-        const course = await this.courseRemote.fetchCourse(1)
-        console.debug(course)
-        return Course.fromJSON(course)
-    }
-
-    /**
-     * 
-     * @param {int} id 
-     */
-    async fetchTocDTOList(id) {
         const dto = await this.courseRemote.fetchTocs(1)
         const tocs = Toc.fromJSON(dto)
-        return tocs
-        
-        // const dtoList = this.tocAssembler.toDTOList(tocs)
-        // return dtoList
+
+        const courseRemoteObject = await this.courseRemote.fetchCourse(1)
+        const course = Course.fromJSON(courseRemoteObject)
+
+        course.tocs = tocs
+       
+        return course
     }
 }

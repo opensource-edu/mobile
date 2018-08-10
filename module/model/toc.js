@@ -28,6 +28,13 @@ class Toc {
     }
 
     /**
+     * @return {Toc}
+     */
+    firstChild() {
+        return this.children[0]
+    }
+
+    /**
      * 从JSON装配Toc对象
      * 
      * @param {Array<Object>} objects 
