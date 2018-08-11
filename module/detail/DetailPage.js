@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {Platform, StyleSheet, Text, Image, View, FlatList, TouchableOpacity, WebView, Dimensions} from 'react-native'
+import {Platform, StyleSheet, Text, Image, View, FlatList, TouchableOpacity, WebView, Dimensions, ScrollView} from 'react-native'
 import SegmentedControlTab from 'react-native-segmented-control-tab'
 import CourseService from '../service/course'
 import Video from 'react-native-video'
@@ -13,9 +13,12 @@ export default class DetailPage extends Component {
     constructor(props) {
         super(props)
 
+        console.debug("DetailPage.constructor")
+
         this.courseService = new CourseService()
         this.state = {
             indexSelected: 1,
+            videoURL: "https://ikeepon.oss-cn-hangzhou.aliyuncs.com/video/Microservices.mp4",
             course: {
                 title: "",
                 author: "",
@@ -30,7 +33,6 @@ export default class DetailPage extends Component {
     async componentDidMount() {
         console.debug('componentDidMount did call')
         const course = await this.courseService.fetchCourse(1)
-        console.debug(course)
         this.setState({
             ...this.state,
             course: course
@@ -42,14 +44,17 @@ export default class DetailPage extends Component {
      * @param {int} index
      */
     onIndexChnaged = (index) => {
+
         this.setState({
             ...this.state,
             indexSelected: index
         })
     }
 
-    onTocClick = (toc) => {
-        console.debug(toc)
+    onTocClick(toc) {
+        this.setState({
+            videoURL: toc.videoURL
+        })
     }
 
     render() {
@@ -66,80 +71,83 @@ export default class DetailPage extends Component {
 
         return (
             <View style={{flex: 1}}>
-                <View>
-                
-                    <Video
-                        source={{uri: "https://ikeepon.oss-cn-hangzhou.aliyuncs.com/video/Microservices.mp4"}}
-                        ref={(ref) => {
-                            this.player = ref
-                        }}
-                        // onBuffer={this.onBuffer}                // Callback when remote video is buffering
-                        // onEnd={this.onEnd}                      // Callback when playback finishes
-                        // onError={this.videoError}               // Callback when video cannot be loaded
-                        style={styles.video}
-                    />
-         
-                </View>
-                
-                <View style={{flex: 1, backgroundColor: '#FFF'}}>
-                    <View style={{height: 30, marginLeft: 20, marginRight: 20, marginTop: 50, marginBottom: 50}}>
-                        <Text style={{fontSize: 20, fontWeight: "bold", lineHeight: 30}}>{this.state.course.title}</Text>
-                        <Text style={{fontSize: 12, color: "#999"}}>{this.state.course.author}</Text>
-                    </View>
-                    <View style={{marginLeft: 60, marginRight: 60}}>
-                        <SegmentedControlTab
-                            values={['介绍', '目录', '评论']}
-                            selectedIndex={this.state.indexSelected}
-                            onTabPress={this.onIndexChnaged}
-                            style={styles.segmentedControlTab}
+                <ScrollView>
+                    <View>
+                    
+                        <Video
+                            source={{uri: this.state.videoURL}}
+                            ref={(ref) => {
+                                this.player = ref
+                            }}
+                            // onBuffer={this.onBuffer}                // Callback when remote video is buffering
+                            // onEnd={this.onEnd}                      // Callback when playback finishes
+                            // onError={this.videoError}               // Callback when video cannot be loaded
+                            style={styles.video}
                         />
+            
                     </View>
-                    {0 == this.state.indexSelected && <View style={{flex: 1}}>
-                        <View style={styles.information}>
-                            <Text style={styles.courseName}>Redis introduction</Text>
+                    
+                    <View style={{flex: 1, backgroundColor: '#FFF'}}>
+                        <View style={{height: 30, marginLeft: 20, marginRight: 20, marginTop: 50, marginBottom: 50}}>
+                            <Text style={{fontSize: 20, fontWeight: "bold", lineHeight: 30}}>{this.state.course.title}</Text>
+                            <Text style={{fontSize: 12, color: "#999"}}>{this.state.course.author}</Text>
                         </View>
-                        <WebView style={{flex: 1}} scalesPageToFit source={{html: "<h1>hello world</h1>"}}></WebView>
-                    </View>
-                    }
-                    {1 == this.state.indexSelected && <View style={{flex: 1}}>
-                        <FlatList 
-                            style={{flex: 1}}
-                            data={this.state.course.tocs}
-                            keyExtractor={(item) => item.id.toString()}
-                            renderItem={({item}) =>
-                                <TouchableOpacity onPress={(item) => this.onTocClick(item)} style={styles.chapterListItem}>   
-                                    <View style={styles.chapterContainer}>
-                                    {/*<BoxShadow setting={shadowOpt}>*/}
-                                        <Text style={styles.chapterTitle}>{item.title}</Text>
-                                        
-                                        <FlatList 
-                                            style={{flex: 1}}
-                                            data={item.children}
-                                            keyExtractor={(item) => item.id.toString()}
-                                            renderItem={({item}) =>
+                        <View style={{marginLeft: 60, marginRight: 60}}>
+                            <SegmentedControlTab
+                                values={['介绍', '目录', '评论']}
+                                selectedIndex={this.state.indexSelected}
+                                onTabPress={this.onIndexChnaged}
+                                style={styles.segmentedControlTab}
+                            />
+                        </View>
+                        {0 == this.state.indexSelected && <View style={{flex: 1}}>
+                            <View style={styles.information}>
+                                <Text style={styles.courseName}>Redis introduction</Text>
+                            </View>
+                            <WebView style={{flex: 1}} scalesPageToFit source={{html: "<h1>hello world</h1>"}}></WebView>
+                        </View>
+                        }
+                        {1 == this.state.indexSelected && <View style={{flex: 1}}>
+                            <FlatList 
+                                style={{flex: 1}}
+                                data={this.state.course.tocs}
+                                keyExtractor={(item) => item.id.toString()}
+                                renderItem={({item}) =>
+                                    <View style={styles.chapterListItem}>
+                                        <View style={styles.chapterContainer}>
+                                        {/*<BoxShadow setting={shadowOpt}>*/}
+                                            <Text style={styles.chapterTitle}>{item.title}</Text>
+                                            
+                                            <FlatList 
+                                                style={{flex: 1}}
+                                                data={item.children}
+                                                keyExtractor={(item) => item.id.toString()}
+                                                renderItem={({item}) =>
 
-                                            <TouchableOpacity onPress={(item) => this.onTocClick(item)} style={styles.sectionListItem}>
-                                                <Text style={styles.sectionIndex}>{item.index}</Text>
-                                                <View style={{paddingBottom: 10}}>
-                                                    <Text style={styles.sectionTitle}>{item.title}</Text>
-                                                    <Text style={styles.sectionTimeLength}>{item.timeLength} minutes</Text>
-                                                </View>
-                                            </TouchableOpacity>
-                                            }
-                                        />
-                                    {/*</BoxShadow>*/}
-                                    </View>
+                                                
+                                                <TouchableOpacity onPress={() => this.onTocClick(item)} style={styles.sectionListItem}>
+                                                    <Text style={styles.sectionIndex}>{item.index}</Text>
+                                                    <View style={{paddingBottom: 10}}>
+                                                        <Text style={styles.sectionTitle}>{item.title}</Text>
+                                                        <Text style={styles.sectionTimeLength}>{item.timeLength} minutes</Text>
+                                                    </View>
+                                                </TouchableOpacity>
+                                                }
+                                            />
+                                        {/*</BoxShadow>*/}
+                                        </View>
 
-                                    {/*1 == item.depth && <View>
-                                        <Text style={{fontSize: 12}}>{item.title}</Text>
+                                        {/*1 == item.depth && <View>
+                                            <Text style={{fontSize: 12}}>{item.title}</Text>
+                                        </View>
+                                        */}
                                     </View>
-                                    */}
-                                </TouchableOpacity>
-                            }
-                        />
+                                }
+                            />
+                        </View>
+                        }
                     </View>
-                    }
-                </View>
+                </ScrollView>
             </View>
         )
     }

@@ -4,15 +4,15 @@
  * Toc 是英文 table of contents 的缩写
  */
 class Toc {
-    constructor(id, title, timeLength, index, parent) {
+    constructor(id, title, videoURL, timeLength, index, parent) {
         this.id = id
         this.title = title
+        this.videoURL = videoURL
         this.timeLength = timeLength
         this.index = index
         this.children = []
         this.parent = parent
         this.depth = !parent ? 0 : parent.depth + 1
-        console.debug(this.depth)
     }
 
     /**
@@ -44,7 +44,7 @@ class Toc {
         const tocs = []
         var index = 1
         for (var object of objects) {
-            const toc = new Toc(object.id, object.title, object.time_length, index, parent)
+            const toc = new Toc(object.id, object.title, object.video, object.time_length, index, parent)
             tocs.push(toc)
             if (object.children && object.children.length > 0) {
                 toc.setChildren(Toc.fromJSON(object.children, index, toc))

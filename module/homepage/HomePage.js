@@ -36,7 +36,7 @@ export default class HomePage extends Component {
                 data={this.state.courses}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({item}) =>
-                    <TouchableOpacity onPress={(item) => this.onPressCourse(item)} style={styles.lesson}>   
+                    <TouchableOpacity onPress={() => this.onPressCourse(item)} style={styles.lesson}>   
                         <View style={styles.courseContainer}>
                             <Image style={styles.courseCover} resizeMode="cover" source={{uri: item.cover}} />
                             <View style={{flex: 1, padding: 20}}>
