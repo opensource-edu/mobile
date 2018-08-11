@@ -4,6 +4,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import HomePage from './module/homepage/HomePage'
 import DetailPage from './module/detail/DetailPage'
 
+
 import { createStackNavigator, } from 'react-navigation'
 
 const App = createStackNavigator({

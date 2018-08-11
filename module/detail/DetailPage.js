@@ -3,7 +3,7 @@ import {Platform, StyleSheet, Text, Image, View, FlatList, TouchableOpacity, Web
 import SegmentedControlTab from 'react-native-segmented-control-tab'
 import CourseService from '../service/course'
 import Video from 'react-native-video'
-import {BoxShadow} from 'react-native-shadow'
+// import {BoxShadow} from 'react-native-shadow'
 
 export default class DetailPage extends Component {
     static navigationOptions = {
